@@ -1,0 +1,117 @@
+table Sales_Data
+	lineageTag: 3ea40234-8153-431a-aaf2-4ed9d7d28098
+
+	column 'Order ID'
+		dataType: string
+		lineageTag: a7384b27-f2c4-4a78-abb9-1fa3e1d715ef
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d1b066b6-c96f-48d0-9fef-c27a8f79973a
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Cost
+		dataType: int64
+		lineageTag: 0b4ef9e7-1541-4139-9cc9-b8563f293109
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Price
+		dataType: int64
+		lineageTag: 636fe159-6074-41f5-8952-89dfd4232d07
+		summarizeBy: sum
+		sourceColumn: Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Order Qty'
+		dataType: int64
+		formatString: 0
+		lineageTag: c770b54c-c8e0-4c14-81a9-5bde7c8df142
+		summarizeBy: sum
+		sourceColumn: Order Qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sales
+		dataType: int64
+		lineageTag: 760b9b0f-a8f7-408b-84c7-af0fbfe73b10
+		summarizeBy: sum
+		sourceColumn: Sales
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ChannelKey
+		dataType: string
+		lineageTag: 97fbdad0-4758-4e1a-b31f-92144c52d33f
+		summarizeBy: none
+		sourceColumn: ChannelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromotionKey
+		dataType: string
+		lineageTag: 4d65d39a-06f8-4fdb-a455-6d8c7940d407
+		summarizeBy: none
+		sourceColumn: PromotionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: string
+		lineageTag: d8834af6-53b6-4c91-a007-4e9f08dc2b6b
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductSubCategoryKey
+		dataType: string
+		lineageTag: a1c24ebf-0bc2-420f-99a4-243a03de2d36
+		summarizeBy: none
+		sourceColumn: ProductSubCategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column StateID
+		dataType: string
+		lineageTag: 07b79aa6-7a63-4c9d-846f-ec6662248b9d
+		summarizeBy: none
+		sourceColumn: StateID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales_Data = m
+		mode: import
+		queryGroup: 'Data Model'
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\paddy\Documents\Analytics_files\Powerbi\Ruth Power BI\Sales_Data1.xlsx"), null, true),
+				    Table_2_Table = Source{[Item="Table_2",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Table_2_Table,{{"Order Qty", Int64.Type}, {"Cost", Int64.Type}, {"Order Date", type date}, {"Price", type number}, {"Sales", type number}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Changed Type",{{"Sales", Int64.Type}, {"Price", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,24 @@
+relationship AutoDetected_2325640d-8391-4501-bbd5-81ff860ea60e
+	fromColumn: Sales_Data.StateID
+	toColumn: Sales_State.StateID
+
+relationship AutoDetected_13d3ef7d-220a-4986-989a-1a4e54b9cdd8
+	fromColumn: Sales_Data.PromotionKey
+	toColumn: Sales_Promotion.PromotionKey
+
+relationship AutoDetected_7c5d53e9-16cb-4959-8198-73dd72f4fe77
+	fromColumn: Sales_Data.ProductSubCategoryKey
+	toColumn: Sales_product_Sub_Category.ProductSubCategoryKey
+
+relationship AutoDetected_1258fa5b-c4b0-422f-9e64-1611e8ed060a
+	fromColumn: Sales_Data.ProductKey
+	toColumn: Sales_Product.ProductKey
+
+relationship AutoDetected_d1fa2251-29dc-4420-8347-c7561b07a5cc
+	fromColumn: Sales_Data.ChannelKey
+	toColumn: Sales_Channel.ChannelKey
+
+relationship c81e90f5-7535-d3ff-a49b-60255a0acf09
+	fromColumn: Sales_Data.'Order Date'
+	toColumn: Date.Date
+

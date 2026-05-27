@@ -1,0 +1,104 @@
+table Metrics
+	lineageTag: 041c0c83-9923-4aab-b7d2-2edb2bf12fe1
+
+	measure 'Total Sales' = SUM(Sales_Data[Sales])
+		formatString: 0
+		lineageTag: 08ec01d6-1cfc-4f27-8e9d-1f5a3bcb8a86
+
+	measure 'Total cost' = SUM(Sales_Data[Cost])
+		formatString: 0
+		lineageTag: c79bf029-7c4b-451a-bb69-88b5f2e7063d
+
+	measure 'Total Profit' = [Total Sales] - [Total cost]
+		formatString: 0
+		lineageTag: 49f8445c-3f21-42ba-af8c-7244f00a6700
+
+	measure SalesLY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))
+		formatString: 0
+		lineageTag: c086e5e9-bb58-4db1-bb76-ca8fa5347a89
+
+	measure 'YoY Sales' = ```
+			
+			
+			var SalesDiff = [Total Sales] - [SalesLY]
+			
+			RETURN
+			
+			DIVIDE(SalesDiff, [SalesLY],0)
+			
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 00c0bacd-825b-4ed1-8d68-7e8b01df77bb
+
+	measure Profit_LY = CALCULATE([Total Profit], SAMEPERIODLASTYEAR('Date'[Date]))
+		formatString: 0
+		lineageTag: 9ba2cdcc-94d5-43c0-8bab-ba02a077596b
+
+	measure 'YoY Profit' =
+			
+			
+			var ProfitDiff = [Total Profit] - [Profit_LY]
+			
+			RETURN
+			
+			DIVIDE(ProfitDiff, [Profit_LY],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8def7a54-01f6-4222-992a-d1707c805d24
+
+	measure Sales_ICON =
+			
+			if([YoY Sales] > 0, UNICHAR(9650), UNICHAR(9660))
+		lineageTag: 70ca46d5-5f55-40ca-859f-8cc94298689c
+
+	measure Profit_ICON =
+			
+			if([YoY Profit] > 0, UNICHAR(9650), UNICHAR(9660))
+		lineageTag: 28ad84a2-f102-4396-81c8-df9e935bf6cb
+
+	measure Profit_ICON_Color =
+			
+			IF([YoY Profit] > 0, "Green", "Red")
+		lineageTag: 78a79a8d-a512-481d-81ec-1e47e6f740b6
+
+	measure Sales_ICON_Color =
+			
+			IF([YoY Sales] > 0, "Green", "Red")
+		lineageTag: c196a6d3-59f8-4bd7-ad99-07990da45cbe
+
+	measure 'Total QTY' = SUM(Sales_Data[Order Qty])
+		formatString: 0
+		lineageTag: e17e53f0-4d4a-4fa2-a937-6c1a1aedbae6
+
+	measure Total_Product = COUNTROWS(Sales_Product)
+		formatString: 0
+		lineageTag: f11ac6df-3e98-4264-bd4f-6a5c624f178a
+
+	measure 'Top 10 Products' = ```
+			//RANKX(TOPN(10, Sales_Product, Sales_Product[ProductName], DESC), [Total Sales],,ASC) 
+			
+			RANKX(ALL(Sales_Product[ProductName]), [Total Sales],,DESC)
+			```
+		formatString: 0
+		lineageTag: 82c20d11-aa12-4bae-9baf-b69f479324eb
+
+	measure Test = "this is a test measure, please delete"
+		lineageTag: 211c26d4-60bc-4943-b6b4-1deba0203a83
+
+	measure Test2 = "This is a new measure, delete later"
+		lineageTag: 1e1c0c6f-eaee-4320-9b93-b2b962220cbf
+
+	partition Metrics = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

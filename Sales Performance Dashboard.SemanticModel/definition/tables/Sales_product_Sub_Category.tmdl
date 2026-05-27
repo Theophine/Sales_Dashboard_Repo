@@ -1,0 +1,43 @@
+table Sales_product_Sub_Category
+	lineageTag: f4b4c5ab-e71d-4540-9fe8-07a67db2f253
+
+	column ProductSubCategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 4fe1c206-8483-4fcf-98fd-ed5a83256fc2
+		summarizeBy: none
+		sourceColumn: ProductSubCategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Sub Category'
+		dataType: string
+		lineageTag: ebfabea6-1b19-4f2b-9753-bb8b73e84889
+		summarizeBy: none
+		sourceColumn: Product Sub Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Category'
+		dataType: string
+		lineageTag: 1552f56f-075c-4f3f-8fb4-3efed58b3d45
+		summarizeBy: none
+		sourceColumn: Product Category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales_product_Sub_Category = m
+		mode: import
+		queryGroup: 'Data Model'
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\paddy\Documents\Analytics_files\Powerbi\Ruth Power BI\Sales_Data1.xlsx"), null, true),
+				    Table_4_Table = Source{[Item="Table_4",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Table_4_Table,{{"ProductSubCategoryKey", Int64.Type}, {"Product Sub Category", type text}, {"Product Category", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

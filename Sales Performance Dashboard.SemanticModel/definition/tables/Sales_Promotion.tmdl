@@ -1,0 +1,51 @@
+table Sales_Promotion
+	lineageTag: cec0edea-114e-42da-89bd-ea3404f45b17
+
+	column PromotionKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 25a22565-2bfa-48c5-b24c-49904f091faf
+		summarizeBy: none
+		sourceColumn: PromotionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromotionName
+		dataType: string
+		lineageTag: f40f92fb-2ef5-45ed-a230-63b361c803d0
+		summarizeBy: none
+		sourceColumn: PromotionName
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromotionDescription
+		dataType: string
+		lineageTag: a78f855f-84f2-4bd0-b7a5-1100cf14e7a6
+		summarizeBy: none
+		sourceColumn: PromotionDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column PromotionType
+		dataType: string
+		lineageTag: 03b0ba9a-e28e-452b-8c2c-a573d572240c
+		summarizeBy: none
+		sourceColumn: PromotionType
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales_Promotion = m
+		mode: import
+		queryGroup: 'Data Model'
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\paddy\Documents\Analytics_files\Powerbi\Ruth Power BI\Sales_Data1.xlsx"), null, true),
+				    Table_5_Table = Source{[Item="Table_5",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Table_5_Table,{{"PromotionKey", Int64.Type}, {"PromotionName", type text}, {"PromotionDescription", type text}, {"PromotionType", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,51 @@
+table Sales_Product
+	lineageTag: 5a9f2b04-c7a0-4f51-84d2-9b8627bc91c9
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 2316ed0d-7642-46bb-9229-826477f918e2
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: aa080407-3dd1-43e2-ab3d-f0192ca84e25
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Manufacturer
+		dataType: string
+		lineageTag: e4106fab-782a-47b5-b1ff-8e29ff3698fb
+		summarizeBy: none
+		sourceColumn: Manufacturer
+
+		annotation SummarizationSetBy = Automatic
+
+	column BrandName
+		dataType: string
+		lineageTag: a3d9f3c2-4fec-41dd-902c-e579efb55c1b
+		summarizeBy: none
+		sourceColumn: BrandName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Sales_Product = m
+		mode: import
+		queryGroup: 'Data Model'
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\paddy\Documents\Analytics_files\Powerbi\Ruth Power BI\Sales_Data1.xlsx"), null, true),
+				    Table_3_Table = Source{[Item="Table_3",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Table_3_Table,{{"ProductKey", Int64.Type}, {"ProductName", type text}, {"Manufacturer", type text}, {"BrandName", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

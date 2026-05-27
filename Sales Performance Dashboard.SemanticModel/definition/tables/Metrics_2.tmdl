@@ -1,0 +1,67 @@
+table Metrics_2
+	lineageTag: fe3a5721-0300-45b8-aa8d-030a53a7b0ea
+
+	measure Total_Sales_new = SUM(Sales_Data[Sales])
+		formatString: 0.00
+		lineageTag: 36250ed4-f594-4cdd-adaf-42c446d87ede
+
+	measure Total_cost_new = SUM(Sales_Data[Cost])
+		formatString: 0
+		lineageTag: 8918335e-399c-4c86-880d-db7e8a108f34
+
+	measure TotalProfit_new = [Total Sales] - [Total cost]
+		formatString: 0
+		lineageTag: 4c88f306-a2b7-4cbc-9a19-c2f7d2363967
+
+	measure SalesLY_new = CALCULATE([Total_Sales_new], DATEADD('Date'[Date], -1, YEAR))
+		formatString: 0
+		lineageTag: d2586b1f-65ed-4057-8cb7-d8962dd1ef99
+
+	measure YoY_Sales_new = ```
+			
+			var Sales_Diff = [Total_Sales_new] - [SalesLY_new]
+			RETURN
+			DIVIDE(Sales_Diff, [SalesLY_new],0)
+			
+			```
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 32ef720c-78fe-4475-90e8-5df6a0c7749c
+
+	measure ProfitLY_new = CALCULATE([TotalProfit_new], DATEADD('Date'[Date], -1, YEAR))
+		formatString: 0
+		lineageTag: 9980d73b-11e0-4bf5-ab41-31ecc76e0a18
+
+	measure YoYProfit_new =
+			
+			var profit_diff = [TotalProfit_new] - [ProfitLY_new]
+			
+			return
+			DIVIDE(profit_diff, [ProfitLY_new], 0)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: fa64a1d1-e082-4ff4-bd70-013aad96170d
+
+	measure Dynamic_icon =
+			
+			var PositiveIcon = UNICHAR(9650)
+			var NegativeIcon = UNICHAR(9660)
+			return
+			IF([YoY_Sales_new] >0, PositiveIcon, NegativeIcon)
+		lineageTag: d9d66e1c-aad0-4759-9c5d-416e11c1e8a0
+
+	measure Icon_color =
+			
+			IF([YoY_Sales_new] >0, "Green", "Red")
+		lineageTag: 98731c18-24b3-4af7-b0e5-948e51ad239c
+
+	partition Metrics_2 = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
