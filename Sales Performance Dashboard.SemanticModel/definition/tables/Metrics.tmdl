@@ -88,6 +88,10 @@ table Metrics
 	measure Test2 = "This is a new measure, delete later"
 		lineageTag: 1e1c0c6f-eaee-4320-9b93-b2b962220cbf
 
+	measure Silly_measure = [Total Sales] * [Total QTY]
+		formatString: 0
+		lineageTag: 90e436c0-3336-4db7-b1fa-66bc59ba39f4
+
 	partition Metrics = m
 		mode: import
 		source =
