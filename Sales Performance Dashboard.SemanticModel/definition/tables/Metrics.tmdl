@@ -82,7 +82,7 @@ table Metrics
 		formatString: 0
 		lineageTag: 82c20d11-aa12-4bae-9baf-b69f479324eb
 
-	measure Test = "this is a test measure, please delete"
+	measure Test_this_should_be_changed = "this is a test measure, please delete"
 		lineageTag: 211c26d4-60bc-4943-b6b4-1deba0203a83
 
 	measure Test2 = "This is a new measure, delete later"
